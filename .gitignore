@@ -32,6 +32,7 @@ yarn-error.log
 .env
 application-local.yml
 application-secrets.yml
+application-local.properties
 *.pem
 
 ### OS ###
