@@ -38,5 +38,14 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
         """)
     List<Application> findStaleApplications(@Param("cutoff") java.time.LocalDateTime cutoff);
 
+    long countByUserId(Long userId);
+
+    @Query("""
+        SELECT a.status, COUNT(a) FROM Application a
+        WHERE a.user.id = :userId
+        GROUP BY a.status
+        """)
+    List<Object[]> countGroupedByStatus(@Param("userId") Long userId);
+
     long countByUserIdAndStatus(Long userId, Application.Status status);
 }
