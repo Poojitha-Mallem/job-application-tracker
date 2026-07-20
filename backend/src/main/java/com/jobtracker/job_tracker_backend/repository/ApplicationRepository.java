@@ -1,6 +1,9 @@
 package com.jobtracker.job_tracker_backend.repository;
 
 import com.jobtracker.job_tracker_backend.entity.Application;
+
+import java.util.List;
+import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,7 +29,14 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
         @Param("companyName") String companyName,
         @Param("status") Application.Status status,
         Pageable pageable
-);
+    );
+
+    @Query("""
+        SELECT a FROM Application a
+        WHERE a.updatedAt < :cutoff
+        AND a.status NOT IN ('OFFER', 'REJECTED', 'WITHDRAWN')
+        """)
+    List<Application> findStaleApplications(@Param("cutoff") java.time.LocalDateTime cutoff);
 
     long countByUserIdAndStatus(Long userId, Application.Status status);
 }
