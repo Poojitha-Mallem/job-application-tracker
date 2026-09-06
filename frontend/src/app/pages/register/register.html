@@ -1,0 +1,41 @@
+<div class="auth-container">
+    <div class="auth-card">
+        <h1>Create Account</h1>
+
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" type="text" formControlName="name" placeholder="Your full name" />
+                @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
+                    <span class="field-error">Name is required.</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" formControlName="email" placeholder="you@example.com" />
+                @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
+                    <span class="field-error">Please enter a valid email.</span>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input id="password" type="password" formControlName="password" placeholder="At least 6 characters" />
+                @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
+                    <span class="field-error">Password must be at least 6 characters.</span>
+                }
+            </div>
+
+            @if (errorMessage) {
+                <div class="error-banner">{{ errorMessage }}</div>
+            }
+
+            <button type="submit" [disabled]="registerForm.invalid || isLoading">
+                {{ isLoading ? 'Creating account...' : 'Register' }}
+            </button>
+        </form>
+
+        <p class="switch-link">Already have an account? <a routerLink="/login">Log In</a></p>
+    </div>
+</div>

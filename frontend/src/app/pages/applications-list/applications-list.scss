@@ -1,0 +1,161 @@
+.page-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    h1 {
+        font-size: 1.75rem;
+        color: #1a1a1a;
+    }
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    border: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #4a6cf7;
+    color: white;
+
+    &:hover {
+        background: #3a5ce5;
+    }
+}
+
+.btn-secondary {
+    background: #eee;
+    color: #333;
+
+    &:hover {
+        background: #ddd;
+    }
+}
+
+.btn-danger-small {
+    background: #fdecea;
+    color: #d32f2f;
+    padding: 0.3rem 0.7rem;
+    font-size: 0.8rem;
+
+    &:hover {
+        background: #f9d5d1;
+    }
+}
+
+.filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    input, select {
+        padding: 0.6rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.9rem;
+    }
+
+    input {
+        flex: 1;
+    }
+}
+
+.error-banner {
+    background: #fdecea;
+    color: #d32f2f;
+    padding: 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+}
+
+.loading-text, .empty-text {
+    text-align: center;
+    color: #888;
+    padding: 3rem 0;
+}
+
+.applications-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+
+    th, td {
+        padding: 0.9rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    th {
+        background: #f9f9fb;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: #666;
+    }
+
+    tbody tr {
+        cursor: pointer;
+
+        &:hover {
+            background: #f5f7ff;
+        }
+    }
+}
+
+.status-badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #eee;
+    color: #555;
+
+    &[data-status="OFFER"] { background: #e3f9e5; color: #1b8a3e; }
+    &[data-status="INTERVIEWING"] { background: #fff4e0; color: #b3720b; }
+    &[data-status="REJECTED"] { background: #fdecea; color: #d32f2f; }
+    &[data-status="WITHDRAWN"] { background: #f0f0f0; color: #777; }
+    &[data-status="APPLIED"] { background: #e8f0fe; color: #1a56db; }
+    &[data-status="IN_PROGRESS"] { background: #f3e8ff; color: #7c3aed; }
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+
+    button {
+        background: white;
+        border: 1px solid #ddd;
+        color: #333;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+
+    span {
+        font-size: 0.9rem;
+        color: #666;
+    }
+}
