@@ -1,6 +1,7 @@
 package com.jobtracker.job_tracker_backend.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,10 +41,14 @@ public class JwtUtil {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public boolean isTokenValid(String token, String email) {
-        String extractedEmail = extractEmail(token);
-        return extractedEmail.equals(email) && !isTokenExpired(token);
+   public boolean isTokenValid(String token, String email) {
+        try {
+            String extractedEmail = extractEmail(token);
+            return extractedEmail.equals(email) && !isTokenExpired(token);
+        } catch (ExpiredJwtException e) {
+            return false;
     }
+}
 
     private boolean isTokenExpired(String token) {
         return extractClaim(token, Claims::getExpiration).before(new Date());
