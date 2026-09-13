@@ -36,3 +36,10 @@ export interface PageResponse<T> {
     number: number;
     size: number;
 }
+
+export interface InterviewPrepResponse {
+    companyName: string;
+    jobTitle: string;
+    technicalQuestions: string[];
+    behavioralQuestions: string[];
+}

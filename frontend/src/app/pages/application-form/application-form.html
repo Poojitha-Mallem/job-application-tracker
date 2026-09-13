@@ -56,5 +56,50 @@
                 </button>
             </div>
         </form>
+
+        @if (isEditMode()) {
+            <div class="ai-prep-section">
+                <div class="ai-prep-header">
+                    <h2>AI Interview Prep</h2>
+                    <button
+                        type="button"
+                        class="btn-ai"
+                        (click)="generateInterviewPrep()"
+                        [disabled]="isGeneratingPrep()"
+                    >
+                        {{ isGeneratingPrep() ? 'Generating...' : 'Generate Questions' }}
+                    </button>
+                </div>
+
+                @if (prepErrorMessage()) {
+                    <div class="error-banner">{{ prepErrorMessage() }}</div>
+                }
+
+                @if (isGeneratingPrep()) {
+                    <p class="ai-loading">Generating tailored interview questions, this may take a few seconds...</p>
+                }
+
+                @if (interviewPrep(); as prep) {
+                    <div class="prep-results">
+                        <div class="prep-column">
+                            <h3>Technical Questions</h3>
+                            <ol>
+                                @for (question of prep.technicalQuestions; track question) {
+                                    <li>{{ question }}</li>
+                                }
+                            </ol>
+                        </div>
+                        <div class="prep-column">
+                            <h3>Behavioral Questions</h3>
+                            <ol>
+                                @for (question of prep.behavioralQuestions; track question) {
+                                    <li>{{ question }}</li>
+                                }
+                            </ol>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
     </div>
 </div>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { Application, ApplicationRequest, ApplicationStatus, PageResponse } from '../models/application.model';
+import { Application, ApplicationRequest, ApplicationStatus, InterviewPrepResponse, PageResponse } from '../models/application.model';
 
 @Injectable({ providedIn: 'root' })
 export class ApplicationService {
@@ -49,6 +49,10 @@ export class ApplicationService {
     updateStatus(id: number, status: ApplicationStatus): Observable<Application> {
         const params = new HttpParams().set('status', status);
         return this.http.patch<Application>(`${this.baseUrl}/${id}/status`, null, { params });
+    }
+
+    getInterviewPrep(applicationId: number): Observable<InterviewPrepResponse> {
+        return this.http.get<InterviewPrepResponse>(`${this.baseUrl}/${applicationId}/interview-prep`);
     }
 
     delete(id: number): Observable<void> {

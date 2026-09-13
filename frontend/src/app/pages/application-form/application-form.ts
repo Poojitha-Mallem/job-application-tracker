@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationService } from '../../services/application.service';
-import { ApplicationStatus } from '../../models/application.model';
+import { ApplicationStatus, InterviewPrepResponse } from '../../models/application.model';
 
 @Component({
     selector: 'app-application-form',
@@ -18,6 +18,10 @@ export class ApplicationForm implements OnInit {
     applicationId: number | null = null;
     isLoading = signal(false);
     errorMessage = signal<string | null>(null);
+
+    interviewPrep = signal<InterviewPrepResponse | null>(null);
+    isGeneratingPrep = signal(false);
+    prepErrorMessage = signal<string | null>(null);
 
     statuses: ApplicationStatus[] = ['APPLIED', 'IN_PROGRESS', 'INTERVIEWING', 'OFFER', 'REJECTED', 'WITHDRAWN'];
 
@@ -93,6 +97,27 @@ export class ApplicationForm implements OnInit {
             error: (err) => {
                 this.isLoading.set(false);
                 this.errorMessage.set(err.error?.message || 'Failed to save application.');
+            }
+        });
+    }
+
+    generateInterviewPrep(): void {
+        if (!this.applicationId) {
+            return;
+        }
+
+        this.isGeneratingPrep.set(true);
+        this.prepErrorMessage.set(null);
+        this.interviewPrep.set(null);
+
+        this.applicationService.getInterviewPrep(this.applicationId).subscribe({
+            next: (response) => {
+                this.interviewPrep.set(response);
+                this.isGeneratingPrep.set(false);
+            },
+            error: () => {
+                this.prepErrorMessage.set('Failed to generate interview questions. Please try again.');
+                this.isGeneratingPrep.set(false);
             }
         });
     }
