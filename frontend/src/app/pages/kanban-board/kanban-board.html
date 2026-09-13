@@ -1,0 +1,43 @@
+<div class="kanban-page">
+    <header class="page-header">
+        <h1>Kanban Board</h1>
+        <button class="btn-secondary" (click)="router.navigate(['/applications'])">List View</button>
+    </header>
+
+    @if (errorMessage()) {
+        <div class="error-banner">{{ errorMessage() }}</div>
+    }
+
+    @if (isLoading()) {
+        <p class="loading-text">Loading...</p>
+    } @else {
+        <div class="board">
+            @for (column of columns(); track column.status) {
+                <div class="column">
+                    <h3 class="column-header" [attr.data-status]="column.status">
+                        {{ column.label }} ({{ column.applications.length }})
+                    </h3>
+
+                    <div
+                        class="column-body"
+                        cdkDropList
+                        [id]="column.status"
+                        [cdkDropListData]="column.applications"
+                        [cdkDropListConnectedTo]="getColumnIds()"
+                        (cdkDropListDropped)="onDrop($event)"
+                    >
+                        @for (app of column.applications; track app.id) {
+                            <div class="kanban-card" cdkDrag (click)="viewApplication(app.id)">
+                                <div class="card-company">{{ app.companyName }}</div>
+                                <div class="card-title">{{ app.jobTitle }}</div>
+                                @if (app.appliedDate) {
+                                    <div class="card-date">{{ app.appliedDate }}</div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
