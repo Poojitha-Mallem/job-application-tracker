@@ -100,6 +100,82 @@
                     </div>
                 }
             </div>
+
+            <div class="rounds-section">
+                <div class="rounds-header">
+                    <h2>Interview Rounds</h2>
+                    <button type="button" class="btn-secondary" (click)="isAddingRound.set(!isAddingRound())">
+                        {{ isAddingRound() ? 'Cancel' : '+ Add Round' }}
+                    </button>
+                </div>
+
+                @if (isAddingRound()) {
+                    <form [formGroup]="roundForm" (ngSubmit)="addRound()" class="round-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Round Type</label>
+                                <select formControlName="roundType">
+                                    @for (type of roundTypes; track type) {
+                                        <option [value]="type">{{ type }}</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Scheduled At</label>
+                                <input type="datetime-local" formControlName="scheduledAt" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select formControlName="status">
+                                    @for (s of roundStatuses; track s) {
+                                        <option [value]="s">{{ s }}</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Result</label>
+                                <select formControlName="result">
+                                    @for (r of roundResults; track r) {
+                                        <option [value]="r">{{ r }}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Feedback</label>
+                            <textarea formControlName="feedback" rows="2"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary" [disabled]="roundForm.invalid">Save Round</button>
+                    </form>
+                }
+
+                @if (rounds().length === 0) {
+                    <p class="empty-text">No interview rounds added yet.</p>
+                } @else {
+                    <div class="rounds-list">
+                        @for (round of rounds(); track round.id) {
+                            <div class="round-card">
+                                <div class="round-info">
+                                    <span class="round-type">{{ round.roundType }}</span>
+                                    <span class="round-status" [attr.data-status]="round.status">{{ round.status }}</span>
+                                    @if (round.result) {
+                                        <span class="round-result" [attr.data-result]="round.result">{{ round.result }}</span>
+                                    }
+                                </div>
+                                @if (round.scheduledAt) {
+                                    <div class="round-date">{{ round.scheduledAt | date:'medium' }}</div>
+                                }
+                                @if (round.feedback) {
+                                    <div class="round-feedback">{{ round.feedback }}</div>
+                                }
+                                <button type="button" class="btn-danger-small" (click)="deleteRound(round.id)">Delete</button>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
         }
     </div>
 </div>

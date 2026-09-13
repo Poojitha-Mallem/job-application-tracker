@@ -3,7 +3,15 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationService } from '../../services/application.service';
-import { ApplicationStatus, InterviewPrepResponse } from '../../models/application.model';
+import { InterviewRoundService } from '../../services/interview-round';
+import {
+    ApplicationStatus,
+    InterviewPrepResponse,
+    InterviewRound,
+    RoundType,
+    RoundStatus,
+    RoundResult
+} from '../../models/application.model';
 
 @Component({
     selector: 'app-application-form',
@@ -23,11 +31,19 @@ export class ApplicationForm implements OnInit {
     isGeneratingPrep = signal(false);
     prepErrorMessage = signal<string | null>(null);
 
+    rounds = signal<InterviewRound[]>([]);
+    isAddingRound = signal(false);
+    roundForm: FormGroup;
+    roundTypes: RoundType[] = ['PHONE_SCREEN', 'TECHNICAL', 'SYSTEM_DESIGN', 'HR', 'MANAGERIAL'];
+    roundStatuses: RoundStatus[] = ['SCHEDULED', 'COMPLETED', 'CANCELLED'];
+    roundResults: RoundResult[] = ['PENDING', 'PASSED', 'FAILED'];
+
     statuses: ApplicationStatus[] = ['APPLIED', 'IN_PROGRESS', 'INTERVIEWING', 'OFFER', 'REJECTED', 'WITHDRAWN'];
 
     constructor(
         private fb: FormBuilder,
         private applicationService: ApplicationService,
+        private interviewRoundService: InterviewRoundService,
         private route: ActivatedRoute,
         private router: Router
     ) {
@@ -39,6 +55,14 @@ export class ApplicationForm implements OnInit {
             appliedDate: [''],
             source: [''],
             salaryExpectation: [null]
+        });
+
+        this.roundForm = this.fb.group({
+            roundType: ['TECHNICAL', [Validators.required]],
+            scheduledAt: [''],
+            status: ['SCHEDULED'],
+            feedback: [''],
+            result: ['PENDING']
         });
     }
 
@@ -67,6 +91,7 @@ export class ApplicationForm implements OnInit {
                     salaryExpectation: app.salaryExpectation
                 });
                 this.isLoading.set(false);
+                this.loadRounds(id);
             },
             error: () => {
                 this.errorMessage.set('Failed to load application.');
@@ -119,6 +144,39 @@ export class ApplicationForm implements OnInit {
                 this.prepErrorMessage.set('Failed to generate interview questions. Please try again.');
                 this.isGeneratingPrep.set(false);
             }
+        });
+    }
+
+    loadRounds(applicationId: number): void {
+        this.interviewRoundService.getByApplication(applicationId).subscribe({
+            next: (rounds) => this.rounds.set(rounds),
+            error: () => {}
+        });
+    }
+
+    addRound(): void {
+        if (this.roundForm.invalid || !this.applicationId) {
+            return;
+        }
+
+        this.interviewRoundService.create(this.applicationId, this.roundForm.value).subscribe({
+            next: () => {
+                this.loadRounds(this.applicationId!);
+                this.roundForm.reset({ roundType: 'TECHNICAL', status: 'SCHEDULED', result: 'PENDING' });
+                this.isAddingRound.set(false);
+            },
+            error: () => this.errorMessage.set('Failed to add interview round.')
+        });
+    }
+
+    deleteRound(roundId: number): void {
+        if (!confirm('Delete this interview round?')) {
+            return;
+        }
+
+        this.interviewRoundService.delete(roundId).subscribe({
+            next: () => this.loadRounds(this.applicationId!),
+            error: () => this.errorMessage.set('Failed to delete interview round.')
         });
     }
 

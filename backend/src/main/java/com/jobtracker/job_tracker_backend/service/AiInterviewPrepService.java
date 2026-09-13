@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +38,13 @@ public class AiInterviewPrepService {
         Application application = getOwnedApplication(userEmail, applicationId);
 
         String prompt = buildPrompt(application);
-        String rawResponse = callGeminiApi(prompt);
 
-        return parseResponse(application, rawResponse);
+        try {
+            String rawResponse = callGeminiApi(prompt);
+            return parseResponse(application, rawResponse);
+        } catch (WebClientResponseException e) {
+            throw new RuntimeException("The AI service is temporarily unavailable. Please try again in a moment.");
+        }
     }
 
     private String buildPrompt(Application application) {

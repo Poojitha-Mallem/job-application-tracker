@@ -6,6 +6,11 @@ export type ApplicationStatus =
     | 'REJECTED'
     | 'WITHDRAWN';
 
+export type RoundType = 'PHONE_SCREEN' | 'TECHNICAL' | 'SYSTEM_DESIGN' | 'HR' | 'MANAGERIAL';
+export type RoundStatus = 'SCHEDULED' | 'COMPLETED' | 'CANCELLED';
+export type RoundResult = 'PENDING' | 'PASSED' | 'FAILED';
+
+
 export interface Application {
     id: number;
     companyName: string;
@@ -42,4 +47,23 @@ export interface InterviewPrepResponse {
     jobTitle: string;
     technicalQuestions: string[];
     behavioralQuestions: string[];
+}
+
+export interface InterviewRound {
+    id: number;
+    roundType: RoundType;
+    scheduledAt: string | null;
+    status: RoundStatus;
+    feedback: string | null;
+    result: RoundResult | null;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface InterviewRoundRequest {
+    roundType: RoundType;
+    scheduledAt?: string;
+    status?: RoundStatus;
+    feedback?: string;
+    result?: RoundResult;
 }

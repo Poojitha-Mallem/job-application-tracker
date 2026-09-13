@@ -167,3 +167,99 @@
         }
     }
 }
+
+.rounds-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.rounds-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h2 {
+        font-size: 1.2rem;
+    }
+}
+
+.round-form {
+    background: #f9f9fb;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+
+    .form-row { display: flex; gap: 1rem; margin-bottom: 1rem; .form-group { flex: 1; } }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; font-size: 0.85rem; margin-bottom: 0.3rem; color: #333; }
+    input, select, textarea { width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; }
+}
+
+.empty-text {
+    color: #888;
+    text-align: center;
+    padding: 1.5rem 0;
+}
+
+.rounds-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.round-card {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    position: relative;
+}
+
+.round-info {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    flex-wrap: wrap;
+}
+
+.round-type {
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.round-status, .round-result {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 10px;
+    background: #eee;
+    color: #555;
+}
+
+.round-status[data-status="COMPLETED"] { background: #e3f9e5; color: #1b8a3e; }
+.round-status[data-status="CANCELLED"] { background: #fdecea; color: #d32f2f; }
+.round-result[data-result="PASSED"] { background: #e3f9e5; color: #1b8a3e; }
+.round-result[data-result="FAILED"] { background: #fdecea; color: #d32f2f; }
+
+.round-date {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 0.4rem;
+}
+
+.round-feedback {
+    font-size: 0.85rem;
+    color: #444;
+    margin-bottom: 0.5rem;
+}
+
+.btn-danger-small {
+    background: #fdecea;
+    color: #d32f2f;
+    border: none;
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
