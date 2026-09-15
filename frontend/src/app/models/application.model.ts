@@ -67,3 +67,10 @@ export interface InterviewRoundRequest {
     feedback?: string;
     result?: RoundResult;
 }
+
+export interface StatsResponse {
+    totalApplications: number;
+    countByStatus: Record<string, number>;
+    responseRate: number;
+    interviewRate: number;
+}

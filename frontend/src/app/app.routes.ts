@@ -6,6 +6,7 @@ import { ApplicationForm } from './pages/application-form/application-form';
 import { authGuard } from './guards/auth-guard';
 import { guestGuard } from './guards/guest-guard';
 import { KanbanBoard } from './pages/kanban-board/kanban-board';
+import { Dashboard } from './pages/dashboard/dashboard';
 
 export const routes: Routes = [
     { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -14,5 +15,6 @@ export const routes: Routes = [
     { path: 'applications', component: ApplicationsList, canActivate: [authGuard] },
     { path: 'applications/new', component: ApplicationForm, canActivate: [authGuard] },
     { path: 'applications/:id', component: ApplicationForm, canActivate: [authGuard] },
-    { path: 'kanban', component: KanbanBoard, canActivate: [authGuard] }
+    { path: 'kanban', component: KanbanBoard, canActivate: [authGuard] },
+    { path: 'dashboard', component: Dashboard, canActivate: [authGuard] }
 ];

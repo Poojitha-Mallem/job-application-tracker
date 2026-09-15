@@ -1,0 +1,44 @@
+<div class="dashboard-page">
+    <header class="page-header">
+        <h1>Dashboard</h1>
+        <button class="btn-secondary" (click)="router.navigate(['/applications'])">Back to List</button>
+    </header>
+
+    @if (errorMessage()) {
+        <div class="error-banner">{{ errorMessage() }}</div>
+    }
+
+    @if (isLoading()) {
+        <p class="loading-text">Loading...</p>
+    } @else if (stats(); as s) {
+        <div class="stat-cards">
+            <div class="stat-card">
+                <div class="stat-value">{{ s.totalApplications }}</div>
+                <div class="stat-label">Total Applications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ s.responseRate }}%</div>
+                <div class="stat-label">Response Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">{{ s.interviewRate }}%</div>
+                <div class="stat-label">Interview Rate</div>
+            </div>
+        </div>
+
+        <div class="breakdown-card">
+            <h2>Status Breakdown</h2>
+            <div class="breakdown-list">
+                @for (status of statusOrder; track status) {
+                    <div class="breakdown-row">
+                        <span class="breakdown-label" [attr.data-status]="status">{{ status }}</span>
+                        <div class="breakdown-bar-track">
+                            <div class="breakdown-bar-fill" [attr.data-status]="status" [style.width.%]="getBarWidth(status)"></div>
+                        </div>
+                        <span class="breakdown-count">{{ getCount(status) }}</span>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
