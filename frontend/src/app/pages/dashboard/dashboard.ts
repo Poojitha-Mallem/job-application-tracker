@@ -1,8 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { Stats} from '../../services/stats';
-import { StatsResponse } from '../../models/application.model';
+import { Stats } from '../../services/stats';
+import { ReminderService } from '../../services/reminder';
+import { StatsResponse, Reminder } from '../../models/application.model';
 
 @Component({
     selector: 'app-dashboard',
@@ -16,12 +17,19 @@ export class Dashboard implements OnInit {
     isLoading = signal(false);
     errorMessage = signal<string | null>(null);
 
+    reminders = signal<Reminder[]>([]);
+
     statusOrder = ['APPLIED', 'IN_PROGRESS', 'INTERVIEWING', 'OFFER', 'REJECTED', 'WITHDRAWN'];
 
-    constructor(protected router: Router, private statsService: Stats) {}
+    constructor(
+        protected router: Router,
+        private statsService: Stats,
+        private reminderService: ReminderService
+    ) {}
 
     ngOnInit(): void {
         this.loadStats();
+        this.loadReminders();
     }
 
     loadStats(): void {
@@ -38,6 +46,23 @@ export class Dashboard implements OnInit {
                 this.isLoading.set(false);
             }
         });
+    }
+
+    loadReminders(): void {
+        this.reminderService.getActive().subscribe({
+            next: (reminders) => this.reminders.set(reminders),
+            error: () => {}
+        });
+    }
+
+    dismissReminder(id: number): void {
+        this.reminderService.dismiss(id).subscribe({
+            next: () => this.reminders.set(this.reminders().filter(r => r.id !== id))
+        });
+    }
+
+    viewApplication(applicationId: number): void {
+        this.router.navigate(['/applications', applicationId]);
     }
 
     getCount(status: string): number {

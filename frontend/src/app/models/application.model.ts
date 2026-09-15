@@ -74,3 +74,12 @@ export interface StatsResponse {
     responseRate: number;
     interviewRate: number;
 }
+
+export interface Reminder {
+    id: number;
+    applicationId: number;
+    companyName: string;
+    message: string;
+    sent: boolean;
+    createdAt: string;
+}

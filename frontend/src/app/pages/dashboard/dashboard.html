@@ -4,6 +4,21 @@
         <button class="btn-secondary" (click)="router.navigate(['/applications'])">Back to List</button>
     </header>
 
+    @if (reminders().length > 0) {
+        <div class="reminders-panel">
+            <h2>Follow-up Reminders</h2>
+            @for (reminder of reminders(); track reminder.id) {
+                <div class="reminder-item">
+                    <div class="reminder-content" (click)="viewApplication(reminder.applicationId)">
+                        <span class="reminder-company">{{ reminder.companyName }}</span>
+                        <span class="reminder-message">{{ reminder.message }}</span>
+                    </div>
+                    <button type="button" class="dismiss-btn" (click)="dismissReminder(reminder.id)">Dismiss</button>
+                </div>
+            }
+        </div>
+    }
+
     @if (errorMessage()) {
         <div class="error-banner">{{ errorMessage() }}</div>
     }

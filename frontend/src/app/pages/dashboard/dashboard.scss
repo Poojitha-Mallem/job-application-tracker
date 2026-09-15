@@ -22,6 +22,7 @@
     background: #eee;
     color: #333;
     font-weight: 500;
+    font-family: inherit;
     cursor: pointer;
 
     &:hover {
@@ -41,6 +42,62 @@
     text-align: center;
     color: #888;
     padding: 3rem 0;
+}
+
+.reminders-panel {
+    background: #fff8e6;
+    border: 1px solid #ffe4a3;
+    border-radius: 10px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+
+    h2 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        color: #8a6d1a;
+    }
+}
+
+.reminder-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #ffe4a3;
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.reminder-content {
+    cursor: pointer;
+    flex: 1;
+
+    .reminder-company {
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-right: 0.5rem;
+    }
+
+    .reminder-message {
+        font-size: 0.82rem;
+        color: #666;
+    }
+}
+
+.dismiss-btn {
+    background: none;
+    border: none;
+    color: #8a6d1a;
+    font-size: 0.8rem;
+    cursor: pointer;
+    text-decoration: underline;
+    font-family: inherit;
+
+    &:hover {
+        color: #6b5414;
+    }
 }
 
 .stat-cards {
