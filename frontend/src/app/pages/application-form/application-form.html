@@ -176,6 +176,41 @@
                     </div>
                 }
             </div>
+
+            <div class="attachments-section">
+                <h2>Attachments</h2>
+
+                <div class="upload-row">
+                    <select [(ngModel)]="selectedFileType" [ngModelOptions]="{standalone: true}">
+                        @for (type of fileTypes; track type) {
+                            <option [value]="type">{{ type }}</option>
+                        }
+                    </select>
+                    <input type="file" (change)="onFileSelected($event)" />
+                    <button
+                        type="button"
+                        class="btn-secondary"
+                        (click)="uploadAttachment()"
+                        [disabled]="!selectedFile || isUploading()"
+                    >
+                        {{ isUploading() ? 'Uploading...' : 'Upload' }}
+                    </button>
+                </div>
+
+                @if (attachments().length === 0) {
+                    <p class="empty-text">No attachments uploaded yet.</p>
+                } @else {
+                    <div class="attachments-list">
+                        @for (attachment of attachments(); track attachment.id) {
+                            <div class="attachment-item">
+                                <span class="attachment-type">{{ attachment.fileType }}</span>
+                                <span class="attachment-name">{{ attachment.fileName }}</span>
+                                <button type="button" class="btn-danger-small" (click)="deleteAttachment(attachment.id)">Delete</button>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
         }
     </div>
 </div>

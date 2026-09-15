@@ -1,9 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApplicationService } from '../../services/application.service';
 import { InterviewRoundService } from '../../services/interview-round';
+import { AttachmentService, Attachment, FileType } from '../../services/attachment';
 import {
     ApplicationStatus,
     InterviewPrepResponse,
@@ -16,7 +17,7 @@ import {
 @Component({
     selector: 'app-application-form',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [CommonModule, ReactiveFormsModule, FormsModule],
     templateUrl: './application-form.html',
     styleUrl: './application-form.scss'
 })
@@ -38,12 +39,19 @@ export class ApplicationForm implements OnInit {
     roundStatuses: RoundStatus[] = ['SCHEDULED', 'COMPLETED', 'CANCELLED'];
     roundResults: RoundResult[] = ['PENDING', 'PASSED', 'FAILED'];
 
+    attachments = signal<Attachment[]>([]);
+    selectedFile: File | null = null;
+    selectedFileType: FileType = 'RESUME';
+    isUploading = signal(false);
+    fileTypes: FileType[] = ['RESUME', 'JOB_DESCRIPTION', 'COVER_LETTER'];
+
     statuses: ApplicationStatus[] = ['APPLIED', 'IN_PROGRESS', 'INTERVIEWING', 'OFFER', 'REJECTED', 'WITHDRAWN'];
 
     constructor(
         private fb: FormBuilder,
         private applicationService: ApplicationService,
         private interviewRoundService: InterviewRoundService,
+        private attachmentService: AttachmentService,
         private route: ActivatedRoute,
         private router: Router
     ) {
@@ -92,6 +100,7 @@ export class ApplicationForm implements OnInit {
                 });
                 this.isLoading.set(false);
                 this.loadRounds(id);
+                this.loadAttachments(id);
             },
             error: () => {
                 this.errorMessage.set('Failed to load application.');
@@ -177,6 +186,49 @@ export class ApplicationForm implements OnInit {
         this.interviewRoundService.delete(roundId).subscribe({
             next: () => this.loadRounds(this.applicationId!),
             error: () => this.errorMessage.set('Failed to delete interview round.')
+        });
+    }
+
+    loadAttachments(applicationId: number): void {
+        this.attachmentService.getByApplication(applicationId).subscribe({
+            next: (attachments) => this.attachments.set(attachments),
+            error: () => {}
+        });
+    }
+
+    onFileSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        this.selectedFile = input.files?.[0] ?? null;
+    }
+
+    uploadAttachment(): void {
+        if (!this.selectedFile || !this.applicationId) {
+            return;
+        }
+
+        this.isUploading.set(true);
+
+        this.attachmentService.upload(this.applicationId, this.selectedFile, this.selectedFileType).subscribe({
+            next: () => {
+                this.loadAttachments(this.applicationId!);
+                this.selectedFile = null;
+                this.isUploading.set(false);
+            },
+            error: () => {
+                this.errorMessage.set('Failed to upload attachment.');
+                this.isUploading.set(false);
+            }
+        });
+    }
+
+    deleteAttachment(attachmentId: number): void {
+        if (!confirm('Delete this attachment?')) {
+            return;
+        }
+
+        this.attachmentService.delete(attachmentId).subscribe({
+            next: () => this.loadAttachments(this.applicationId!),
+            error: () => this.errorMessage.set('Failed to delete attachment.')
         });
     }
 
